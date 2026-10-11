@@ -13,7 +13,10 @@ int is_selinux_enabled(void)
 	/* init_selinuxmnt() gets called before this function. We
  	 * will assume that if a selinux file system is mounted, then
  	 * selinux is enabled. */
-#ifdef ANDROID
+#if defined(__aarch64__)
+	/* Mac arm64 guest reports SELinux off to apps. x86_64 keeps the Windows check. */
+	return 0;
+#elif defined(ANDROID)
 	return (selinux_mnt ? 1 : 0);
 #else
 	return (selinux_mnt && has_selinux_config);
